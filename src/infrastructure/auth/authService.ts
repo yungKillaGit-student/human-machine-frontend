@@ -1,5 +1,6 @@
 import { API_PATH } from "../../constants/api";
 import { User } from "../../types/auth";
+import { UserCreateDto } from "../../dataAccess/criteria";
 
 let _isAuthenticated: boolean | null = null;
 
@@ -15,7 +16,8 @@ export class UnauthorizedError extends Error {
   }
 }
 
-export const authenticate = async (): Promise<User> => {
+export const authenticate = async (): Promise<any> => {
+  return false;
   let response;
   try {
     response = await fetch(`${API_PATH}/users/current`, {
@@ -47,7 +49,7 @@ export const authenticate = async (): Promise<User> => {
   }
 };
 
-export const login = async (email: string, password: string): Promise<User> => {
+export const signIn = async (email: string, password: string): Promise<User> => {
   let response;
   try {
     response = await fetch(`${API_PATH}/users/signin`,
@@ -85,7 +87,30 @@ export const login = async (email: string, password: string): Promise<User> => {
   }
 };
 
-export const logout = async () => {
+export const signUp = async (user: UserCreateDto): Promise<User> => {
+  let response;
+  try {
+    response = await fetch(`${API_PATH}/users`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(user)
+    });
+  }
+  catch (err) {
+    throw new Error(CANT_CONNECT_TO_SERVER_ERROR);
+  }
+
+  if (response.ok) {
+    return response.json();
+  }
+
+  throw new Error("Sorry, an unexpected error occurred.");
+};
+
+export const signOut = async () => {
   _isAuthenticated = false;
   if (!_isAuthenticated) return;
 

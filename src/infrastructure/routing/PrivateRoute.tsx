@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Redirect, RouteProps } from "react-router-dom";
 
 import { isAuthenticated } from "../auth/authService";
-import { loginPath } from "../auth/constants";
+import { signInPath, signUpPath } from "../auth/constants";
 
 const PrivateRoute = ({ children, component: Component, render, ...rest }: RouteProps) => {
   return (
@@ -10,7 +10,7 @@ const PrivateRoute = ({ children, component: Component, render, ...rest }: Route
       {...rest}
       render={(props) => {
         if (!isAuthenticated()) {
-          return <Redirect to={{ pathname: loginPath, state: { from: props.location } }} />;
+          return <Redirect to={{ pathname: signInPath, state: { from: props.location } }} />;
         }
 
         if (Component) {

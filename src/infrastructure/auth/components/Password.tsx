@@ -25,7 +25,7 @@ const Password = ({
 
   return (
     <TextField
-      error={error != null}
+      error={!!error}
       onChange={onChangeCallback}
       id={id}
       type={showPassword ? "text" : "password"}

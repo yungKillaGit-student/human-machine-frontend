@@ -1,1 +1,2 @@
-export const loginPath = "/login";
+export const signInPath = "/signin";
+export const signUpPath = "/signup";
