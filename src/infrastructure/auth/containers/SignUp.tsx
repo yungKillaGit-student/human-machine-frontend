@@ -56,6 +56,7 @@ const SignUp = () => {
         <GridRow label={startCase(textboxName)} key={textboxName}>
           <Box width="100%" ml="auto">
             <TextField
+              type={textboxName === "password" || textboxName === "repeatPassword" ? "password" : "text"}
               variant="outlined"
               error={!!validation[textboxName]}
               value={formFields[textboxName as TextFieldName]}
@@ -77,6 +78,14 @@ const SignUp = () => {
 
     if (Object.keys(validation).length > 0) {
       setValidation(validation);
+      return false;
+    }
+
+    if (formFields.password !== formFields.repeatPassword) {
+      setValidation({
+        password: "Passwords must be the same",
+        repeatPassword: "Passwords must be the same"
+      });
       return false;
     }
 
