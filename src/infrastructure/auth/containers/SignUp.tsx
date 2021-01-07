@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Box, Button, Grid, TextField } from "@material-ui/core";
+import { Box, Button, Grid, IconButton, TextField } from "@material-ui/core";
+import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import startCase from "lodash/startCase";
 
 import GridRow from "../../../components/GridRow";
@@ -27,7 +28,11 @@ const useStyles = makeStyles(() => ({
     justifyContent: "center"
   },
   formFields: {
-    width: 500
+    width: 900
+  },
+  avatarIcon: {
+    width: 150,
+    height: 150
   }
 }));
 
@@ -130,26 +135,57 @@ const SignUp = () => {
     <Box className={classes.root}>
       <Box className={classes.formFields}>
         <Grid container spacing={2}>
-          { textBoxes }
-          <GridRow label="" labelSize={6} childrenSize={3}>
-            <Button
-              color="primary"
-              variant="outlined"
-              fullWidth={true}
-              onClick={onOk}
-            >
-              Ok
-            </Button>
-          </GridRow>
-          <Grid xs={3} container item>
-            <Button
-              color="primary"
-              variant="outlined"
-              fullWidth={true}
-              onClick={onCancel}
-            >
-              Cancel
-            </Button>
+          <Grid container item xs={4}>
+            <Grid item xs={12}>
+              <Box mt={-8} width="100%" textAlign="center">
+                <IconButton>
+                  <AccountBoxIcon classes={{ root: classes.avatarIcon }}/>
+                </IconButton>
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <Box width="100%" textAlign="center">
+                <Button
+                  color="primary"
+                  variant="outlined"
+                >
+                  Upload
+                </Button>
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <Box width="100%" textAlign="center">
+                <Button
+                  color="primary"
+                  variant="outlined"
+                >
+                  Delete
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
+          <Grid container item xs={8} spacing={2}>
+            { textBoxes }
+            <GridRow label="" labelSize={6} childrenSize={3}>
+              <Button
+                color="primary"
+                variant="outlined"
+                fullWidth={true}
+                onClick={onOk}
+              >
+                Ok
+              </Button>
+            </GridRow>
+            <Grid xs={3} container item>
+              <Button
+                color="primary"
+                variant="outlined"
+                fullWidth={true}
+                onClick={onCancel}
+              >
+                Cancel
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       </Box>
