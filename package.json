@@ -1,0 +1,181 @@
+{
+  "name": "human-machine-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://127.0.0.1:5000",
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.21.0",
+    "date-fns": "^2.16.1",
+    "lodash": "^4.17.20",
+    "query-string": "^6.13.6",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "react-focus-lock": "^2.5.0",
+    "react-query": "^2.25.2",
+    "react-redux": "^7.2.2",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.4",
+    "react-table": "^7.6.0",
+    "redux": "^4.0.5"
+  },
+  "devDependencies": {
+    "@types/date-fns": "^2.6.0",
+    "@types/jest": "^24.9.1",
+    "@types/lodash": "^4.14.162",
+    "@types/node": "^12.12.69",
+    "@types/react": "^16.9.53",
+    "@types/react-day-picker": "^5.3.0",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-redux": "^7.1.9",
+    "@types/react-router-dom": "^5.1.6",
+    "@types/react-table": "^7.0.24",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react-hooks": "^4.1.0",
+    "eslint-plugin-standard": "^4.0.1",
+    "typescript": "^3.9.7"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "update-version-files": "node ./bin/update-version-patch.js",
+    "fix:ts": "eslint --ext .ts --fix src",
+    "fix:tsx": "eslint --ext .tsx --fix src"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "standard",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:react/recommended",
+      "plugin:react-hooks/recommended"
+    ],
+    "rules": {
+      "quotes": [
+        "error",
+        "double",
+        {
+          "avoidEscape": true
+        }
+      ],
+      "semi": [
+        "error",
+        "always"
+      ],
+      "eol-last": "off",
+      "no-trailing-spaces": [
+        "off",
+        {
+          "skipBlankLines": true
+        }
+      ],
+      "brace-style": [
+        "error",
+        "stroustrup",
+        {
+          "allowSingleLine": true
+        }
+      ],
+      "spaced-comment": "off",
+      "space-before-function-paren": "off",
+      "no-return-assign": "off",
+      "no-cond-assign": "off",
+      "no-template-curly-in-string": "off",
+      "no-unneeded-ternary": [
+        "off",
+        {
+          "defaultAssignment": false
+        }
+      ],
+      "no-useless-escape": "off",
+      "object-property-newline": "off",
+      "operator-linebreak": "off",
+      "prefer-promise-reject-errors": "off",
+      "padded-blocks": [
+        "error",
+        {
+          "blocks": "never",
+          "switches": "never",
+          "classes": "never"
+        }
+      ],
+      "curly": "off",
+      "comma-spacing": [
+        "error",
+        {
+          "before": false,
+          "after": true
+        }
+      ],
+      "comma-dangle": [
+        "error",
+        {
+          "arrays": "never",
+          "objects": "never",
+          "imports": "never",
+          "exports": "never",
+          "functions": "never"
+        }
+      ],
+      "camelcase": [
+        "error",
+        {
+          "allow": [
+            "^UNSAFE_"
+          ]
+        }
+      ],
+      "react/prop-types": [
+        1,
+        {
+          "skipUndeclared": true
+        }
+      ],
+      "react/jsx-uses-vars": 1,
+      "react/react-in-jsx-scope": "error",
+      "react/jsx-no-duplicate-props": 2,
+      "react/default-props-match-prop-types": 2,
+      "react/display-name": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-floating-promises": "off",
+      "@typescript-eslint/no-empty-function": "off",
+      "@typescript-eslint/ban-ts-comment": "off"
+    },
+    "overrides": [
+      {
+        "files": [
+          "**/*.ts?(x)"
+        ],
+        "rules": {
+          "@typescript-eslint/explicit-function-return-type": 0
+        }
+      }
+    ]
+  }
+}
