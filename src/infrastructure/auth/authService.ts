@@ -17,7 +17,6 @@ export class UnauthorizedError extends Error {
 }
 
 export const authenticate = async (): Promise<any> => {
-  return false;
   let response;
   try {
     response = await fetch(`${API_PATH}/users/current`, {
