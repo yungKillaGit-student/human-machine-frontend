@@ -37,8 +37,4 @@ export default {
     const result = await showDialog(DeleteDialog, config);
     return result === true;
   }
-
-  // async sessionExpired(): Promise<void> {
-  //   await showDialog(SessionExpiredDialog, {}, { blockOthers: true });
-  // }
 };
