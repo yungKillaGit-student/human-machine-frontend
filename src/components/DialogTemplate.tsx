@@ -2,28 +2,40 @@ import React, { ReactNode, useCallback } from "react";
 import FocusLock, { MoveFocusInside } from "react-focus-lock";
 
 import {
-  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions,
-  Box, Button, IconButton, makeStyles
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Box,
+  Button,
+  IconButton,
+  makeStyles,
+  Typography
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 
-const useStyles = (width?: number) => makeStyles(() => ({
-  closeIcon: {
-    color: "rgb(0,0,0)"
-  },
-  paper: {
-    minWidth: width || 400
-  }
-}));
+const useStyles = (width?: number, height?: number) => makeStyles(() => {
+  return ({
+    closeIcon: {
+      color: "rgb(0,0,0)"
+    },
+    paper: {
+      minWidth: width || 400,
+      minHeight: height
+    }
+  });
+});
 
 interface Props {
-  classes?: any;
+  outsideClasses?: any;
   title: string;
   content: string | ReactNode;
   mainActionButton?: ReactNode;
   cancelText?: string;
   cancelButtonColor?: "inherit" | "default" | "primary" | "secondary";
   width?: number;
+  height?: number;
   showCloseButton?: boolean;
   showCancelButton?: boolean;
   open: boolean;
@@ -37,12 +49,14 @@ const DialogTemplate = ({
   cancelText,
   cancelButtonColor,
   width,
+  height,
   showCloseButton = true,
   showCancelButton,
   open,
-  onClose
+  onClose,
+  outsideClasses
 }: Props) => {
-  const classes = useStyles(width)();
+  const classes = useStyles(width, height)();
   const cancelCallback = useCallback(() => onClose(null), [onClose]);
 
   const CancelButton = (
@@ -68,17 +82,19 @@ const DialogTemplate = ({
       <Dialog open={open} classes={{ paper: classes.paper }}>
         <DialogTitle>
           <Box display="flex">
-            {title}
+            <Typography>
+              {title}
+            </Typography>
             {showCloseButton &&
-            <Box ml="auto" mt={-1.5} mr={-1.5}>
-              <IconButton tabIndex={-1} aria-label="close" onClick={cancelCallback}>
-                <CloseIcon className={classes.closeIcon} />
-              </IconButton>
-            </Box>
+              <Box ml="auto" mt={-1.5} mr={-1.5}>
+                <IconButton tabIndex={-1} aria-label="close" onClick={cancelCallback}>
+                  <CloseIcon className={classes.closeIcon} />
+                </IconButton>
+              </Box>
             }
           </Box>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent classes={outsideClasses?.dialogContent}>
           {typeof content === "string"
             ? <DialogContentText>{content}</DialogContentText>
             : content
@@ -87,9 +103,9 @@ const DialogTemplate = ({
         <DialogActions>
           {showCancelButton && CancelButtonWithFocus}
           {mainActionButton &&
-          <MoveFocusInside>
-            {mainActionButton}
-          </MoveFocusInside>
+            <MoveFocusInside>
+              {mainActionButton}
+            </MoveFocusInside>
           }
         </DialogActions>
       </Dialog>
