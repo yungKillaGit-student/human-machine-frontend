@@ -1,20 +1,22 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { Box, Button, Grid, IconButton, TextField } from "@material-ui/core";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
+import { Box, Button, Grid, TextField } from "@material-ui/core";
 import startCase from "lodash/startCase";
 
-import GridRow from "../../../components/GridRow";
-import { ElementType } from "../../../types/common";
-import { useFormFields } from "../../../hooks/useFormFields";
+import GridRow from "components/GridRow";
+import { ElementType } from "types/common";
+import { useFormFields } from "hooks/useFormFields";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
-import { UserCreateDto } from "../../../dataAccess/criteria";
-import { signUp } from "../authService";
-import { useRequiredFieldsValidation } from "../../../hooks/useRequiredFieldsValidation";
+import { UserCreateDto } from "dataAccess/criteria";
+import { signUp } from "../../authService";
+import { useRequiredFieldsValidation } from "hooks/useRequiredFieldsValidation";
+import ImageUploader from "../../../../components/ImageUploader";
+import OkCancelButtons from "../../../../components/OkCancelButtons";
+import ProfileInformation from "./ProfileInformation/ProfileInformation";
 
 const TEXT_FIELDS_KEYS = ["firstName", "lastName", "country", "email", "password", "repeatPassword"] as const;
 
-type TextFieldName = ElementType<typeof TEXT_FIELDS_KEYS>
+export type TextFieldName = ElementType<typeof TEXT_FIELDS_KEYS>
 
 const TEXT_FIELDS_INITIAL_STATE = TEXT_FIELDS_KEYS.reduce((o, key) => ({
   ...o, [key]: ""
@@ -29,10 +31,6 @@ const useStyles = makeStyles(() => ({
   },
   formFields: {
     width: 900
-  },
-  avatarIcon: {
-    width: 150,
-    height: 150
   }
 }));
 
@@ -97,12 +95,15 @@ const SignUp = () => {
     return true;
   }, [formFields, getValidationResult]);
 
+  const [showProfileInformation, setShowProfileInformation] = useState(false);
+
   const onOk = useCallback(async () => {
     if (!validateInputs()) {
       return;
     }
 
-    const {
+    setShowProfileInformation(true);
+    /*const {
       country,
       email,
       firstName,
@@ -124,68 +125,46 @@ const SignUp = () => {
     }
     catch (err) {
       console.log(err);
-    }
-  }, [formFields, history, validateInputs]);
+    }*/
+  }, [validateInputs]);
 
   const onCancel = useCallback(() => {
     history.push("/");
   }, [history]);
 
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
+  const imageUrl = useMemo(() => {
+    if (imageFile) {
+      return URL.createObjectURL(imageFile);
+    }
+  }, [imageFile]);
+
+  const onChangeImage = useCallback((event) => {
+    setImageFile(event.target.files[0]);
+  }, []);
+
+  const onDeleteImage = useCallback(() => {
+    setImageFile(null);
+  }, []);
+
   return (
     <Box className={classes.root}>
       <Box className={classes.formFields}>
-        <Grid container spacing={2}>
+        <Grid container spacing={5}>
           <Grid container item xs={4}>
-            <Grid item xs={12}>
-              <Box mt={-8} width="100%" textAlign="center">
-                <IconButton>
-                  <AccountBoxIcon classes={{ root: classes.avatarIcon }}/>
-                </IconButton>
-              </Box>
-            </Grid>
-            <Grid item xs={12}>
-              <Box width="100%" textAlign="center">
-                <Button
-                  color="primary"
-                  variant="outlined"
-                >
-                  Upload
-                </Button>
-              </Box>
-            </Grid>
-            <Grid item xs={12}>
-              <Box width="100%" textAlign="center">
-                <Button
-                  color="primary"
-                  variant="outlined"
-                >
-                  Delete
-                </Button>
-              </Box>
-            </Grid>
+            <ImageUploader
+              imageUrl={imageUrl}
+              onChangeImage={onChangeImage}
+              onDeleteImage={onDeleteImage}
+            />
           </Grid>
           <Grid container item xs={8} spacing={2}>
-            { textBoxes }
-            <GridRow label="" labelSize={6} childrenSize={3}>
-              <Button
-                color="primary"
-                variant="outlined"
-                fullWidth={true}
-                onClick={onOk}
-              >
-                Ok
-              </Button>
-            </GridRow>
-            <Grid xs={3} container item>
-              <Button
-                color="primary"
-                variant="outlined"
-                fullWidth={true}
-                onClick={onCancel}
-              >
-                Cancel
-              </Button>
-            </Grid>
+            { showProfileInformation ? <ProfileInformation formFields={formFields}/> : textBoxes }
+            <OkCancelButtons
+              mainAction={onOk}
+              cancelAction={onCancel}
+            />
           </Grid>
         </Grid>
       </Box>

@@ -18,7 +18,7 @@ const secondaryColor: SimplePaletteColorOptions = {
 
 const fontSize = 11;
 
-export const border = "#7D7D7D solid 0.5px";
+export const border = "#000 solid 1px";
 
 const overrides: Overrides = {
   MuiButton: {
@@ -150,6 +150,11 @@ const overrides: Overrides = {
     padding: {
       paddingTop: 0,
       paddingBottom: 0
+    }
+  },
+  MuiCardHeader: {
+    root: {
+      background: "#ace"
     }
   }
 };
