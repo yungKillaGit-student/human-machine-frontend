@@ -1,29 +1,19 @@
 import React from "react";
 
-import { QueryCache, ReactQueryCacheProvider } from "react-query";
-
 import Authentication from "infrastructure/auth/containers/Authentication";
 import Router from "infrastructure/routing/Router";
-import AppRouting from "infrastructure/routing/AppRouting";
-
-const queryCache = new QueryCache({
-  defaultConfig: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: false
-    }
-  }
-});
+import NavigationFrame from "./infrastructure/routing/NavigationFrame";
+import DialogManager from "infrastructure/dialogs/components/DialogManager";
 
 const App = () => {
   return (
-    <ReactQueryCacheProvider queryCache={queryCache}>
-      <Authentication>
-        <Router>
-          <AppRouting/>
-        </Router>
-      </Authentication>
-    </ReactQueryCacheProvider>
+    <Authentication>
+      <Router>
+        <DialogManager>
+          <NavigationFrame/>
+        </DialogManager>
+      </Router>
+    </Authentication>
   );
 };
 

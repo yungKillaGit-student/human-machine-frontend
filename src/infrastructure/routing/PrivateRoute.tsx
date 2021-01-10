@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Redirect, RouteProps } from "react-router-dom";
 
 import { isAuthenticated } from "../auth/authService";
-import { signInPath, signUpPath } from "../auth/constants";
+import { signInPath } from "../auth/constants";
 
 const PrivateRoute = ({ children, component: Component, render, ...rest }: RouteProps) => {
   return (

@@ -1,11 +1,10 @@
-import React, { ChangeEvent, FormEvent, useState, useCallback, useEffect } from "react";
+import React, { ChangeEvent, FormEvent, useState, useCallback } from "react";
 import { RouteComponentProps } from "react-router";
-import { Link as RouterLink } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
 import { appActions } from "state/appState";
 
-import { TextField, makeStyles, Box, Grid, Button, Link } from "@material-ui/core";
+import { TextField, makeStyles, Box, Grid, Button } from "@material-ui/core";
 
 import * as authService from "../authService";
 
@@ -13,7 +12,7 @@ import ErrorBlock from "components/ErrorBlock";
 import ProgressButton from "components/ProgressButton";
 import Password from "../components/Password";
 import GridRow from "../../../components/GridRow";
-import { signUpPath } from "../constants";
+import { signUpStartPath } from "../constants";
 import { useRequiredFieldsValidation } from "../../../hooks/useRequiredFieldsValidation";
 
 const useStyles = makeStyles((theme) => {
@@ -129,6 +128,11 @@ const SignIn = (props: RouteComponentProps) => {
     setPasswordVisibility(!passwordVisibility);
   }, [passwordVisibility]);
 
+  const onSignUp = useCallback(() => {
+    const { history } = props;
+    history.replace(signUpStartPath);
+  }, [props]);
+
   return (
     <div className={classes.root}>
       <form className={classes.form} onSubmit={onSignIn}>
@@ -177,16 +181,9 @@ const SignIn = (props: RouteComponentProps) => {
                 variant="outlined"
                 disabled={executing}
                 fullWidth={true}
+                onClick={onSignUp}
               >
-                <Link
-                  tabIndex={-1}
-                  component={RouterLink}
-                  to={signUpPath}
-                  underline="none"
-                  classes={{ root: classes.link }}
-                >
-                  Sign Up
-                </Link>
+                Sign Up
               </Button>
             </Box>
           </GridRow>

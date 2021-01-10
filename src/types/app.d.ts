@@ -1,5 +1,7 @@
+import { User } from "./auth";
+
 export interface AppState {
-  user: UserData | null;
+  user: User | null;
   authenticationError: string | null;
   isAuthenticated?: boolean | null;
 }

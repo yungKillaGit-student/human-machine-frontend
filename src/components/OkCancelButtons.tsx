@@ -1,34 +1,49 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import GridRow from "./GridRow";
 import { Button, Grid } from "@material-ui/core";
 
 interface Props {
-  mainAction: () => void;
-  cancelAction: () => void;
+  mainActionButton?: ReactNode;
+  cancelActionButton?: ReactNode;
+  mainAction?: () => void;
+  cancelAction?: () => void;
 }
 
-const OkCancelButtons = ({ mainAction, cancelAction }: Props) => {
+const OkCancelButtons = ({
+  mainActionButton,
+  cancelActionButton,
+  mainAction,
+  cancelAction
+}: Props) => {
   return (
     <>
       <GridRow label="" labelSize={6} childrenSize={3}>
-        <Button
-          color="primary"
-          variant="outlined"
-          fullWidth={true}
-          onClick={mainAction}
-        >
-          Ok
-        </Button>
+        {
+          mainActionButton ?? (
+            <Button
+              color="primary"
+              variant="outlined"
+              fullWidth={true}
+              onClick={mainAction}
+            >
+              Ok
+            </Button>
+          )
+        }
       </GridRow>
       <Grid xs={3} container item>
-        <Button
-          color="primary"
-          variant="outlined"
-          fullWidth={true}
-          onClick={cancelAction}
-        >
-          Cancel
-        </Button>
+        {
+          cancelActionButton ?? (
+            <Button
+              color="primary"
+              variant="outlined"
+              fullWidth={true}
+              onClick={cancelAction}
+            >
+              Cancel
+            </Button>
+          )
+        }
       </Grid>
     </>
   );

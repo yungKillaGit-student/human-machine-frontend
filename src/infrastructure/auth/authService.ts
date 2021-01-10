@@ -1,6 +1,6 @@
 import { API_PATH } from "../../constants/api";
 import { User } from "../../types/auth";
-import { UserCreateDto } from "../../dataAccess/criteria";
+import { UserCreateDto } from "services/users/models";
 
 let _isAuthenticated: boolean | null = null;
 
@@ -106,8 +106,9 @@ export const signUp = async (user: UserCreateDto): Promise<User> => {
   if (response.ok) {
     return response.json();
   }
-
-  throw new Error("Sorry, an unexpected error occurred.");
+  else {
+    throw response;
+  }
 };
 
 export const signOut = async () => {
