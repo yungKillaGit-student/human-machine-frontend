@@ -40,7 +40,7 @@ const ImageUploader = ({
         {
           imageUrl
             ? <img src={imageUrl} alt="" width="100%" height="100%"/>
-            : <Box mt={-4}><AccountBoxIcon classes={{ root: classes.imageBox }}/></Box>
+            : <Box mt={-4}><AccountBoxIcon style={{ color: "gray" }} classes={{ root: classes.imageBox }}/></Box>
         }
       </Box>
       <Box>

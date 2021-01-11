@@ -16,49 +16,34 @@ const secondaryColor: SimplePaletteColorOptions = {
   contrastText: "#FFFFFF"
 };
 
-const fontSize = 11;
-
-export const border = "#000 solid 1px";
+export const fontSize = 16;
+export const border = "white 1px solid";
+export const primaryButtonColor = "#5ae";
+export const secondaryButtonColor = "#fc0";
 
 const overrides: Overrides = {
   MuiButton: {
-    contained: {
-      "&$disabled": {
-        color: "rgba(0, 0, 0, 0.38)",
-        backgroundColor: "rgba(0, 0, 0, 0.12)"
+    outlinedPrimary: {
+      fontSize: 12,
+      backgroundColor: primaryButtonColor,
+      color: "white",
+      border: "none",
+      boxShadow: "1.5px 1.5px 1.5px 1.5px #49d !important",
+      "&:hover": {
+        backgroundColor: primaryButtonColor,
+        border: "none"
       }
     },
-    root: {
-      maxHeight: "25px",
-      fontSize: fontSize
-    }
-  },
-  MuiTable: {
-    root: {
-      borderLeft: border,
-      borderRight: border,
-      borderBottom: border
-    }
-  },
-  MuiTableRow: {
-    head: {
-      position: "sticky",
-      top: 0,
-      zIndex: 1,
-      alignSelf: "flex-start"
-    }
-  },
-  MuiTableCell: {
-    root: {
-      padding: "4px 4px 4px",
-      minHeight: 30
-    },
-    head: {
-      border: border
-    },
-    body: {
-      borderLeft: border,
-      borderRight: border
+    outlinedSecondary: {
+      fontSize: 12,
+      backgroundColor: secondaryButtonColor,
+      color: "white",
+      border: "none",
+      boxShadow: "1.5px 1.5px 1.5px 1.5px #eb0 !important",
+      "&:hover": {
+        backgroundColor: secondaryButtonColor,
+        border: "none"
+      }
     }
   },
   MuiInputBase: {
@@ -101,15 +86,6 @@ const overrides: Overrides = {
       marginTop: 4
     }
   },
-  MuiTooltip: {
-    tooltip: {
-      fontSize: fontSize,
-      lineHeight: "16px",
-      fontWeight: "normal",
-      backgroundColor: "#000000",
-      padding: "4px 8px"
-    }
-  },
   MuiDialogTitle: {
     root: {
       padding: "16px 20px",
@@ -136,20 +112,15 @@ const overrides: Overrides = {
       padding: 20
     }
   },
-  MuiLink: {
-    root: {
-      color: "#225074" // Link should have the same hardcoded color in all themes. By design.
-    }
-  },
-  MuiTab: {
-    root: {
-      borderBottom: "2px solid rgba(0, 0, 0, 0.12)"
-    }
-  },
   MuiList: {
     padding: {
       paddingTop: 0,
       paddingBottom: 0
+    }
+  },
+  MuiCard: {
+    root: {
+      border: "1px solid #68d"
     }
   },
   MuiCardHeader: {
@@ -174,6 +145,9 @@ const themeConfig: ThemeOptions = {
       fontSize: 20,
       fontWeight: "normal",
       letterSpacing: "0.15px"
+    },
+    h5: {
+      fontSize: fontSize
     },
     subtitle1: {
       fontSize: 16,

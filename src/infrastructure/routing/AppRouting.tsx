@@ -11,9 +11,9 @@ const AppRouting = () => {
   return (
     <Switch>
       <PrivateRoute exact path="/" component={Home}/>
-      <Users/>
-      <Events/>
-      <Documents/>
+      <PrivateRoute path="/users" component={Users}/>
+      <PrivateRoute path="/events" component={Events}/>
+      <PrivateRoute path="/documents" component={Documents}/>
       <Redirect to="/"/>
     </Switch>
   );

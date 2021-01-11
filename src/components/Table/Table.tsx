@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useFlexLayout, useTable } from "react-table";
-import { TableStyle, TableProps } from "./types";
+import { TableProps } from "./types";
 import TableBody from "./TableBody";
 
 const defaultCellRenderer = ({ value }: any) => value;
@@ -10,7 +10,7 @@ function Table<T extends object = any> ({
   data,
   defaultColumn,
   style,
-  minRows = 10,
+  minRows = 9,
   name
 }: TableProps<T>) {
   const [tableColumns, hiddenColumns] = useMemo(() => {

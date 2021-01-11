@@ -14,10 +14,12 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 
 import { TableBodyProps, TableStyle } from "./types";
-import { border } from "../../assets/themeConfig";
+import { fontSize } from "../../assets/themeConfig";
+
+const border = "1px solid white";
 
 const useStyles = (tableStyle?: TableStyle, areColumnsExist = true) => makeStyles((theme: Theme) => ({
-  root: {
+  tableContainer: {
     height: "100%",
     borderTop: areColumnsExist ? "" : border,
     minHeight: tableStyle?.minHeight || "35vh",
@@ -36,19 +38,43 @@ const useStyles = (tableStyle?: TableStyle, areColumnsExist = true) => makeStyle
       backgroundColor: "#CFDCEF !important"
     }
   },
+  header: {
+    backgroundColor: "#47c",
+    position: "sticky",
+    top: 0,
+    zIndex: 1,
+    alignSelf: "flex-start",
+    "&>th": {
+      color: "white"
+    }
+  },
   emptyRow: {
     display: "flex",
-    flex: "1 0 auto"
+    flex: "1 0 auto",
+    borderBottom: border
   },
-  fullContainer: {
+  tableBody: {
     width: "100%",
-    height: "100%"
+    height: "100%",
+    "&>tr:nth-child(even)": {
+      backgroundColor: "#fff"
+    },
+    "&>tr:nth-child(odd)": {
+      backgroundColor: "#ddf"
+    }
   },
-  tableContainer: {
+  table: {
     width: "100%",
     height: "100%",
     minHeight: tableStyle?.minHeight || "35vh",
-    maxHeight: tableStyle?.maxHeight || "100%"
+    maxHeight: tableStyle?.maxHeight || "100%",
+    borderLeft: border,
+    borderRight: border,
+    borderBottom: border
+  },
+  tableCell: {
+    borderLeft: border,
+    borderRight: border
   }
 }));
 
@@ -81,28 +107,33 @@ function TableBody<T extends object = any> ({
                 flex: `${column.width} 0 auto`,
                 width: column.width
               };
-              return <TableCell size="medium" style={cellStyle} key={column.id}/>;
+              return (
+                <TableCell
+                  size="medium"
+                  style={cellStyle}
+                  key={column.id}
+                  classes={{ body: classes.tableCell }}
+                />
+              );
             })
           }
         </TableRow>
       ));
     }
     return null;
-  }, [classes.emptyRow, columns, minRows, rows.length]);
+  }, [classes.emptyRow, classes.tableCell, columns, minRows, rows.length]);
 
   return (
-    <TableContainer className={classes.root}>
-      <Table {...getTableProps({ className: classes.tableContainer })}>
+    <TableContainer className={classes.tableContainer}>
+      <Table {...getTableProps({ className: classes.table })}>
         <TableHead>
           {
             headerGroups.map(headerGroup => (
               // eslint-disable-next-line react/jsx-key
-              <TableRow {...headerGroup.getHeaderGroupProps()} className={classes.hover}>
+              <TableRow {...headerGroup.getHeaderGroupProps()} className={classes.header}>
                 {
                   headerGroup.headers.map(column => {
-                    const columnHeaderProps: any = column.canSort
-                      ? column.getHeaderProps(column.getSortByToggleProps)
-                      : column.getHeaderProps();
+                    const columnHeaderProps: any = column.getHeaderProps();
                     delete columnHeaderProps.title;
                     delete columnHeaderProps.style.cursor;
 
@@ -111,12 +142,14 @@ function TableBody<T extends object = any> ({
                         {...columnHeaderProps}
                         size="small"
                         key={column.id}
+                        classes={{ body: classes.tableCell, head: classes.tableCell }}
                       >
                         <Box
                           display="flex"
                           alignItems="center"
                           justifyContent="space-between"
                           fontWeight="normal"
+                          fontSize={fontSize}
                         >
                           {
                             column.render("Header")
@@ -130,7 +163,7 @@ function TableBody<T extends object = any> ({
             ))
           }
         </TableHead>
-        <MaterialTableBody {...getTableBodyProps({ className: classes.fullContainer })}>
+        <MaterialTableBody {...getTableBodyProps({ className: classes.tableBody })}>
           {rows.map((row, i) => {
             prepareRow(row);
             return (
@@ -140,7 +173,11 @@ function TableBody<T extends object = any> ({
                   row.cells.map(cell => {
                     return (
                       // eslint-disable-next-line react/jsx-key
-                      <TableCell size="medium" {...cell.getCellProps()}>
+                      <TableCell
+                        size="medium"
+                        {...cell.getCellProps()}
+                        classes={{ body: classes.tableCell }}
+                      >
                         <Typography>
                           { cell.render("Cell") }
                         </Typography>

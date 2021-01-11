@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -27,7 +28,9 @@ const RouterLink = ({
 
   return (
     <Link to={canNavigate ? to : "#"} className={classes.root}>
-      { children }
+      <Typography>
+        { children }
+      </Typography>
     </Link>
   );
 };

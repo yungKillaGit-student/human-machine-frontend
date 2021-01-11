@@ -254,7 +254,8 @@ const SignUpEnd = ({
                   </Box>
                   <Box ml="auto">
                     <Button
-                      variant="contained"
+                      color="secondary"
+                      variant="outlined"
                       onClick={onChangeShowPinCodeEdit(true)}
                     >
                       Set PIN
