@@ -29,7 +29,7 @@ const LoginInfoEdit = ({
   oldPassword
 }: Props) => {
   const {
-    formFields,
+    formFieldsData,
     onChange,
     onChangeValidation,
     validation,
@@ -39,18 +39,18 @@ const LoginInfoEdit = ({
   const getValidationResult = useRequiredFieldsValidation();
 
   const validateInputs = useCallback(() => {
-    const validation = getValidationResult(formFields);
+    const validation = getValidationResult(formFieldsData);
 
     if (Object.keys(validation).length > 0) {
       onChangeValidation(validation);
       return false;
     }
 
-    if (oldPassword !== formFields.currentPassword) {
+    if (oldPassword !== formFieldsData.currentPassword) {
       validation.currentPassword = "This password is not equal to current password";
     }
 
-    if (formFields.newPassword !== formFields.repeatPassword) {
+    if (formFieldsData.newPassword !== formFieldsData.repeatPassword) {
       validation.password = "Passwords must be the same";
       validation.repeatPassword = "Passwords must be the same";
     }
@@ -61,20 +61,20 @@ const LoginInfoEdit = ({
     }
 
     return true;
-  }, [formFields, getValidationResult, oldPassword, onChangeValidation]);
+  }, [formFieldsData, getValidationResult, oldPassword, onChangeValidation]);
 
   const mainAction = useCallback(async () => {
     if (!validateInputs) {
       return;
     }
 
-    const { newPassword, repeatPassword } = formFields;
+    const { newPassword, repeatPassword } = formFieldsData;
 
     setValue("password", newPassword);
     setValue("repeatedPassword", repeatPassword);
     setOpen(false)();
     resetState();
-  }, [formFields, resetState, setOpen, setValue, validateInputs]);
+  }, [formFieldsData, resetState, setOpen, setValue, validateInputs]);
 
   const onClose = useCallback(() => {
     setOpen(false)();
@@ -87,7 +87,7 @@ const LoginInfoEdit = ({
       content={
         <LoginInfoEditContent
           email={email}
-          formFields={formFields}
+          formFields={formFieldsData}
           validation={validation}
           onChange={onChange}
           mainAction={mainAction}

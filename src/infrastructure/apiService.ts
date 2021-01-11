@@ -24,6 +24,7 @@ interface RequestOptions {
   method?: Method;
   data?: any;
   headers?: any;
+  withCredentials?: boolean;
 }
 
 export const readErrorInfo = async (response: any): Promise<ErrorInfo> => {
@@ -57,7 +58,7 @@ export const handleError = async (response: any): Promise<ApiError> => {
   return new ApiError(getUserFriendlyMessage(errorInfo), errorInfo, response.status);
 };
 
-export const executeRequest = async <T>(url: string, options: RequestOptions & DataOptions = {}): Promise<T> => {
+export const executeRequest = async <T>(url: string, options: RequestOptions & DataOptions = { withCredentials: true }): Promise<T> => {
   return new Promise((resolve, reject) => {
     axios.request({ ...{ url }, ...options })
       .then(response => resolve(response.data))

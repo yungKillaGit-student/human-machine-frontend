@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 export interface UseFormFieldsState<T> {
-  formFields: T;
+  formFieldsData: T;
   validation: Record<string, string>;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   setValue: (name: string, value: any) => void;
@@ -10,7 +10,7 @@ export interface UseFormFieldsState<T> {
 }
 
 export const useFormFields = <T>(initialValues: T): UseFormFieldsState<T> => {
-  const [formFields, setFormFields] = useState<T>({ ...initialValues });
+  const [formFieldsData, setFormFieldsData] = useState<T>({ ...initialValues });
   const [validation, setValidation] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -21,22 +21,22 @@ export const useFormFields = <T>(initialValues: T): UseFormFieldsState<T> => {
   }, [initialValues]);
 
   useEffect(() => {
-    setFormFields(initialValues);
+    setFormFieldsData(initialValues);
   }, [initialValues]);
 
   const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const updatedValidation = { ...validation };
     updatedValidation[e.target.name] = "";
     setValidation(updatedValidation);
-    setFormFields((prev: T) => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormFieldsData((prev: T) => ({ ...prev, [e.target.name]: e.target.value }));
   }, [validation]);
 
   const setValue = useCallback((name: string, value: any) => {
-    setFormFields((prev: T) => ({ ...prev, [name]: value }));
+    setFormFieldsData((prev: T) => ({ ...prev, [name]: value }));
   }, []);
 
   const resetState = useCallback(() => {
-    setFormFields(initialValues);
+    setFormFieldsData(initialValues);
   }, [initialValues]);
 
   const onChangeValidation = useCallback((newValidation: Record<string, string>) => {
@@ -44,7 +44,7 @@ export const useFormFields = <T>(initialValues: T): UseFormFieldsState<T> => {
   }, []);
 
   return {
-    formFields,
+    formFieldsData,
     onChange,
     setValue,
     resetState,

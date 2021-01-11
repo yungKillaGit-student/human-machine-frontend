@@ -5,6 +5,9 @@ import startCase from "lodash/startCase";
 import { Box, TextareaAutosize, TextField } from "@material-ui/core";
 import OkCancelButtons from "../../../../../components/OkCancelButtons";
 import Layout from "../../../../../components/Layout";
+import { ComboboxOption } from "../../../../../components/VirtualAutoComplete";
+import SelectCountry from "../../../../../components/SelectCountry";
+import SelectRussianRegion from "../../../../../components/SelectRussianRegion";
 
 interface Props {
   formFields: Record<ProfileInfoTextField, string>;
@@ -17,6 +20,10 @@ interface Props {
   onDeleteImage?: () => void;
   about: string;
   onChangeAbout: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  selectedCountry: ComboboxOption | null;
+  onChangeCountry: (event: any, value: ComboboxOption | null) => void;
+  selectedRegion: ComboboxOption | null;
+  onChangeRegion: (event: any, value: ComboboxOption | null) => void;
 }
 
 const ProfileInfoEditContent = ({
@@ -29,7 +36,11 @@ const ProfileInfoEditContent = ({
   onChangeImage,
   onDeleteImage,
   about,
-  onChangeAbout
+  onChangeAbout,
+  selectedCountry,
+  onChangeCountry,
+  selectedRegion,
+  onChangeRegion
 }: Props) => {
   const textBoxes = useMemo(() => {
     return Object.keys(formFields).map(textboxName => {
@@ -53,6 +64,13 @@ const ProfileInfoEditContent = ({
     });
   }, [onChange, formFields, validation]);
 
+  const isRussiaSelected = useMemo(() => {
+    if (selectedCountry) {
+      return selectedCountry.value === "RU";
+    }
+    return false;
+  }, [selectedCountry]);
+
   return (
     <Layout
       withImageUploader={true}
@@ -61,6 +79,24 @@ const ProfileInfoEditContent = ({
       imageUrl={imageUrl}
     >
       { textBoxes }
+      <GridRow label="Country">
+        <SelectCountry
+          selectedOption={selectedCountry}
+          onChange={onChangeCountry}
+        />
+      </GridRow>
+      <GridRow label={isRussiaSelected ? "Region" : ""}>
+        <Box
+          visibility={isRussiaSelected ? "visible" : undefined}
+          display={isRussiaSelected ? undefined : "none"}
+          width="100%"
+        >
+          <SelectRussianRegion
+            selectedOption={selectedRegion}
+            onChange={onChangeRegion}
+          />
+        </Box>
+      </GridRow>
       <GridRow label="About">
         <Box width="100%" ml="auto">
           <TextareaAutosize

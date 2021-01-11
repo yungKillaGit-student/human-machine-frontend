@@ -27,6 +27,7 @@ import { handleError, uploadFile } from "../../../apiService";
 import { useDispatch } from "react-redux";
 import { appActions } from "../../../../state/appState";
 import { updateUser } from "../../../../services/users/api";
+import { ComboboxOption } from "../../../../components/VirtualAutoComplete";
 
 interface Props {
   useFormFieldsState: UseFormFieldsState<Record<SignUpTextField, string>>;
@@ -34,6 +35,10 @@ interface Props {
   imageUrl?: string;
   onChangeImage?: (event: React.ChangeEvent) => void;
   onDeleteImage?: () => void;
+  selectedCountry: ComboboxOption | null;
+  onChangeCountry: (event: any, value: ComboboxOption | null) => void;
+  selectedRegion: ComboboxOption | null;
+  onChangeRegion: (event: any, value: ComboboxOption | null) => void;
 }
 
 const SignUpEnd = ({
@@ -41,10 +46,14 @@ const SignUpEnd = ({
   imageFile,
   imageUrl,
   onChangeImage,
-  onDeleteImage
+  onDeleteImage,
+  selectedCountry,
+  onChangeCountry,
+  selectedRegion,
+  onChangeRegion
 }: Props) => {
   const {
-    formFields,
+    formFieldsData,
     setValue,
     resetState
   } = useFormFieldsState;
@@ -52,11 +61,11 @@ const SignUpEnd = ({
   const renderInfoLabels = useCallback((textFields: string[]) => {
     return textFields.map(textFieldName => {
       let labelText = `${startCase(textFieldName)}:`;
-      if (formFields[textFieldName as SignUpTextField] && textFieldName !== "password") {
-        labelText = `${labelText} ${formFields[textFieldName as SignUpTextField]}`;
+      if (formFieldsData[textFieldName as SignUpTextField] && textFieldName !== "password") {
+        labelText = `${labelText} ${formFieldsData[textFieldName as SignUpTextField]}`;
       }
       if (textFieldName === "password") {
-        labelText = `${labelText} ${"*".repeat(formFields.password.length)}`;
+        labelText = `${labelText} ${"*".repeat(formFieldsData.password.length)}`;
       }
       return (
         <Grid item xs={12} key={textFieldName}>
@@ -66,7 +75,7 @@ const SignUpEnd = ({
         </Grid>
       );
     });
-  }, [formFields]);
+  }, [formFieldsData]);
 
   const [showLoginInfoEdit, setShowLoginInfoEdit] = useState(false);
   const onChangeShowLoginInfoEdit = useCallback((isOpen: boolean) => {
@@ -81,16 +90,14 @@ const SignUpEnd = ({
   const profileInfoFormFieldsInitial = useMemo(() => {
     const {
       firstName,
-      lastName,
-      country
-    } = formFields;
+      lastName
+    } = formFieldsData;
 
     return {
       firstName: firstName,
-      lastName: lastName,
-      country: country
+      lastName: lastName
     };
-  }, [formFields]);
+  }, [formFieldsData]);
 
   const [pinCode, setPinCode] = useState("");
   const onChangePinCode = useCallback((newPinCode: string) => {
@@ -121,9 +128,23 @@ const SignUpEnd = ({
       password,
       repeatPassword,
       firstName,
-      lastName,
-      country
-    } = formFields;
+      lastName
+    } = formFieldsData;
+
+    if (!selectedCountry) {
+      dialogs.alert({
+        title: "Alert!",
+        content: "Please, select country"
+      });
+      return;
+    }
+    else if (selectedCountry.value === "RU" && !selectedRegion) {
+      dialogs.alert({
+        title: "Alert!",
+        content: "Please, select region"
+      });
+      return;
+    }
 
     if (!pinCode) {
       dialogs.alert({
@@ -135,7 +156,7 @@ const SignUpEnd = ({
 
     const createDto: UserCreateDto = {
       about: about,
-      country: country,
+      country: selectedCountry.name,
       email: email,
       firstName: firstName,
       lastName: lastName,
@@ -158,7 +179,7 @@ const SignUpEnd = ({
     catch (error) {
       handleError(error);
     }
-  }, [about, formFields, history, imageFile, pinCode, resetFormState]);
+  }, [about, formFieldsData, history, imageFile, pinCode, resetFormState, selectedCountry, selectedRegion]);
 
   const cancelAction = useCallback(() => {
     history.push(AuthPages.SignIn);
@@ -175,9 +196,9 @@ const SignUpEnd = ({
       <LoginInfoEdit
         isOpen={showLoginInfoEdit}
         setOpen={onChangeShowLoginInfoEdit}
-        email={formFields.email}
+        email={formFieldsData.email}
         setValue={setValue}
-        oldPassword={formFields.password}
+        oldPassword={formFieldsData.password}
       />
       <ProfileInfoEdit
         isOpen={showProfileInfoEdit}
@@ -189,6 +210,10 @@ const SignUpEnd = ({
         formFieldsInitialState={profileInfoFormFieldsInitial}
         about={about}
         onChangeAbout={onChangeAbout}
+        selectedCountry={selectedCountry}
+        onChangeCountry={onChangeCountry}
+        selectedRegion={selectedRegion}
+        onChangeRegion={onChangeRegion}
       />
       <PinCodeEdit
         isOpen={showPinCodeEdit}

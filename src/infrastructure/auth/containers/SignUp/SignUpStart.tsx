@@ -1,69 +1,99 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { ReactElement, useCallback, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { UseFormFieldsState } from "../../../../hooks/useFormFields";
 import GridRow from "../../../../components/GridRow";
 import startCase from "lodash/startCase";
-import { Box, Button, TextField } from "@material-ui/core";
+import { Box, TextField } from "@material-ui/core";
 import { useRequiredFieldsValidation } from "../../../../hooks/useRequiredFieldsValidation";
 import Layout from "../../../../components/Layout";
 import OkCancelButtons from "../../../../components/OkCancelButtons";
 import { AuthPages } from "../../constants";
-import { SignUpTextField } from "../../../routing/AuthRouting";
+import { SignUpTextField, TEXT_FIELDS_KEYS } from "../../../routing/AuthRouting";
+import { ComboboxOption } from "../../../../components/VirtualAutoComplete";
+import SelectCountry from "../../../../components/SelectCountry";
+import SelectRussianRegion from "../../../../components/SelectRussianRegion";
+import dialogs from "../../../dialogs/dialogs";
 
 interface Props {
   useFormFieldsState: UseFormFieldsState<Record<SignUpTextField, string>>;
   imageUrl?: string;
   onChangeImage?: (event: React.ChangeEvent) => void;
   onDeleteImage?: () => void;
+  selectedCountry: ComboboxOption | null;
+  onChangeCountry: (event: any, value: ComboboxOption | null) => void;
+  selectedRegion: ComboboxOption | null;
+  onChangeRegion: (event: any, value: ComboboxOption | null) => void;
 }
 
 const SignUpStart = ({
   useFormFieldsState,
   imageUrl,
   onDeleteImage,
-  onChangeImage
+  onChangeImage,
+  selectedCountry,
+  onChangeCountry,
+  selectedRegion,
+  onChangeRegion
 }: Props) => {
   const history = useHistory();
 
   const {
-    formFields,
+    formFieldsData,
     validation,
     onChange,
     onChangeValidation
   } = useFormFieldsState;
 
-  const textBoxes = useMemo(() => {
-    return Object.keys(formFields).map(textboxName => {
-      return (
-        <GridRow label={startCase(textboxName)} key={textboxName}>
-          <Box width="100%" ml="auto">
-            <TextField
-              type={textboxName === "password" || textboxName === "repeatPassword" ? "password" : "text"}
-              variant="outlined"
-              error={!!validation[textboxName]}
-              value={formFields[textboxName as SignUpTextField]}
-              onChange={onChange}
-              name={textboxName}
-              fullWidth={true}
-              helperText={validation[textboxName]}
-            />
-          </Box>
-        </GridRow>
-      );
-    });
-  }, [onChange, formFields, validation]);
+  const formFields = useMemo(() => {
+    return Object.keys(formFieldsData).reduce((o, textboxName) => {
+      return {
+        ...o,
+        [textboxName]: (
+          <GridRow label={startCase(textboxName)} key={textboxName}>
+            <Box width="100%" ml="auto">
+              <TextField
+                type={textboxName === "password" || textboxName === "repeatPassword" ? "password" : "text"}
+                variant="outlined"
+                error={!!validation[textboxName]}
+                value={formFieldsData[textboxName as SignUpTextField]}
+                onChange={onChange}
+                name={textboxName}
+                fullWidth={true}
+                helperText={validation[textboxName]}
+              />
+            </Box>
+          </GridRow>
+        )
+      };
+    }, {}) as Record<SignUpTextField, ReactElement>;
+  }, [formFieldsData, validation, onChange]);
 
   const getValidationResult = useRequiredFieldsValidation();
 
   const validateInputs = useCallback(() => {
-    const validation = getValidationResult(formFields);
+    const validation = getValidationResult(formFieldsData);
+
+    if (!selectedCountry) {
+      dialogs.alert({
+        title: "Alert!",
+        content: "Please, select country"
+      });
+      return false;
+    }
+    else if (selectedCountry.value === "RU" && !selectedRegion) {
+      dialogs.alert({
+        title: "Alert!",
+        content: "Please, select region"
+      });
+      return false;
+    }
 
     if (Object.keys(validation).length > 0) {
       onChangeValidation(validation);
       return false;
     }
 
-    if (formFields.password !== formFields.repeatPassword) {
+    if (formFieldsData.password !== formFieldsData.repeatPassword) {
       onChangeValidation({
         password: "Passwords must be the same",
         repeatPassword: "Passwords must be the same"
@@ -72,7 +102,7 @@ const SignUpStart = ({
     }
 
     return true;
-  }, [formFields, getValidationResult, onChangeValidation]);
+  }, [formFieldsData, getValidationResult, onChangeValidation, selectedCountry, selectedRegion]);
 
   const onOk = useCallback(async () => {
     if (!validateInputs()) {
@@ -85,6 +115,13 @@ const SignUpStart = ({
     history.push(AuthPages.SignIn);
   }, [history]);
 
+  const isRussiaSelected = useMemo(() => {
+    if (selectedCountry) {
+      return selectedCountry.value === "RU";
+    }
+    return false;
+  }, [selectedCountry]);
+
   return (
     <Layout
       withImageUploader={true}
@@ -92,7 +129,29 @@ const SignUpStart = ({
       onChangeImage={onChangeImage}
       imageUrl={imageUrl}
     >
-      { textBoxes }
+      { formFields.firstName }
+      { formFields.lastName }
+      <GridRow label="Country">
+        <SelectCountry
+          selectedOption={selectedCountry}
+          onChange={onChangeCountry}
+        />
+      </GridRow>
+      <GridRow label={isRussiaSelected ? "Region" : ""}>
+        <Box
+          visibility={isRussiaSelected ? "visible" : undefined}
+          display={isRussiaSelected ? undefined : "none"}
+          width="100%"
+        >
+          <SelectRussianRegion
+            selectedOption={selectedRegion}
+            onChange={onChangeRegion}
+          />
+        </Box>
+      </GridRow>
+      { formFields.email }
+      { formFields.password }
+      { formFields.repeatPassword }
       <OkCancelButtons
         mainAction={onOk}
         cancelAction={onCancel}
