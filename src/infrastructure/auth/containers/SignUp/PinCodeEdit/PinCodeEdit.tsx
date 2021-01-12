@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import DialogTemplate from "../../../../../components/DialogTemplate";
-import LoginInfoEditContent from "../LoginInfoEdit/LoginInfoEditContent";
 import PinCodeEditContent from "./PinCodeEditContent";
+import { PIN_CODE_REGEX } from "../../../../../constants/regex";
 
 interface Props {
   isOpen: boolean;
@@ -24,21 +24,27 @@ const PinCodeEdit = ({
   }, []);
 
   useEffect(() => {
-    setNewPinCode(pinCode);
+    if (pinCode) {
+      setNewPinCode("");
+    }
   }, [pinCode]);
 
   const onClose = useCallback(() => {
     setOpen(false)();
     setNewPinCode(pinCode);
+    setError("");
   }, [pinCode, setOpen]);
 
   const mainAction = useCallback(() => {
     if (!newPinCode) {
       setError("Please, fill required field");
     }
-    else {
+    else if (PIN_CODE_REGEX.test(newPinCode)) {
       onChangePinCode(newPinCode);
       onClose();
+    }
+    else {
+      setError("Please, enter valid PIN (4 digits)");
     }
   }, [newPinCode, onChangePinCode, onClose]);
 

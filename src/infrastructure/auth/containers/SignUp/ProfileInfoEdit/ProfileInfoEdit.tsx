@@ -88,7 +88,7 @@ const ProfileInfoEdit = ({
       });
       return false;
     }
-    else if (newSelectedCountry.value === "RU" && !selectedRegion) {
+    else if (newSelectedCountry.value === "RU" && !newSelectedRegion) {
       dialogs.alert({
         title: "Alert!",
         content: "Please, select region"
@@ -97,10 +97,10 @@ const ProfileInfoEdit = ({
     }
 
     return true;
-  }, [formFieldsData, getValidationResult, newSelectedCountry, onChangeValidation, selectedRegion]);
+  }, [formFieldsData, getValidationResult, newSelectedCountry, newSelectedRegion, onChangeValidation]);
 
   const mainAction = useCallback(async () => {
-    if (!validateInputs) {
+    if (!validateInputs()) {
       return;
     }
 

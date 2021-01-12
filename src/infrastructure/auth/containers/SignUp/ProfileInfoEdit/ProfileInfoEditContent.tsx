@@ -8,6 +8,7 @@ import Layout from "../../../../../components/Layout";
 import { ComboboxOption } from "../../../../../components/VirtualAutoComplete";
 import SelectCountry from "../../../../../components/SelectCountry";
 import SelectRussianRegion from "../../../../../components/SelectRussianRegion";
+import TextArea from "../../../../../components/TextArea";
 
 interface Props {
   formFields: Record<ProfileInfoTextField, string>;
@@ -99,11 +100,9 @@ const ProfileInfoEditContent = ({
       </GridRow>
       <GridRow label="About">
         <Box width="100%" ml="auto">
-          <TextareaAutosize
+          <TextArea
             value={about}
             onChange={onChangeAbout}
-            rows={6}
-            style={{ width: "97%" }}
           />
         </Box>
       </GridRow>

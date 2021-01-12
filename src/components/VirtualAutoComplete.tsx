@@ -126,7 +126,6 @@ const VirtualAutoComplete = ({
   return (
     <Autocomplete
       onChange={onChange}
-      componentName={name}
       fullWidth={isFullWidth}
       disabled={disabled}
       value={selectedOption}

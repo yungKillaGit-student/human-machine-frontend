@@ -3,9 +3,7 @@ export interface Country {
   alpha2Code: string;
 }
 
-export interface RegionsTable {
-  caption: string;
-  rows: Record<string, {
-    columns: Record<string, string>;
-  }>;
+export interface Region {
+  name: string;
+  code: string;
 }

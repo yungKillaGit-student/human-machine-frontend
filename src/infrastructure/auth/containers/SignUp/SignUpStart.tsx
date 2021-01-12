@@ -8,11 +8,12 @@ import { useRequiredFieldsValidation } from "../../../../hooks/useRequiredFields
 import Layout from "../../../../components/Layout";
 import OkCancelButtons from "../../../../components/OkCancelButtons";
 import { AuthPages } from "../../constants";
-import { SignUpTextField, TEXT_FIELDS_KEYS } from "../../../routing/AuthRouting";
+import { SignUpTextField } from "../../../routing/AuthRouting";
 import { ComboboxOption } from "../../../../components/VirtualAutoComplete";
 import SelectCountry from "../../../../components/SelectCountry";
 import SelectRussianRegion from "../../../../components/SelectRussianRegion";
 import dialogs from "../../../dialogs/dialogs";
+import { EMAIL_REGEX } from "../../../../constants/regex";
 
 interface Props {
   useFormFieldsState: UseFormFieldsState<Record<SignUpTextField, string>>;
@@ -23,6 +24,8 @@ interface Props {
   onChangeCountry: (event: any, value: ComboboxOption | null) => void;
   selectedRegion: ComboboxOption | null;
   onChangeRegion: (event: any, value: ComboboxOption | null) => void;
+  resetLocalStorage: () => void;
+  isRussiaSelected: boolean;
 }
 
 const SignUpStart = ({
@@ -33,7 +36,9 @@ const SignUpStart = ({
   selectedCountry,
   onChangeCountry,
   selectedRegion,
-  onChangeRegion
+  onChangeRegion,
+  resetLocalStorage,
+  isRussiaSelected
 }: Props) => {
   const history = useHistory();
 
@@ -41,7 +46,8 @@ const SignUpStart = ({
     formFieldsData,
     validation,
     onChange,
-    onChangeValidation
+    onChangeValidation,
+    resetState
   } = useFormFieldsState;
 
   const formFields = useMemo(() => {
@@ -73,6 +79,15 @@ const SignUpStart = ({
   const validateInputs = useCallback(() => {
     const validation = getValidationResult(formFieldsData);
 
+    if (!EMAIL_REGEX.test(formFieldsData.email)) {
+      validation.email = "Please, enter valid e-mail";
+    }
+
+    if (formFieldsData.password !== formFieldsData.repeatPassword) {
+      validation.password = "Passwords must be the same";
+      validation.repeatPassword = "Passwords must be the same";
+    }
+
     if (!selectedCountry) {
       dialogs.alert({
         title: "Alert!",
@@ -93,14 +108,6 @@ const SignUpStart = ({
       return false;
     }
 
-    if (formFieldsData.password !== formFieldsData.repeatPassword) {
-      onChangeValidation({
-        password: "Passwords must be the same",
-        repeatPassword: "Passwords must be the same"
-      });
-      return false;
-    }
-
     return true;
   }, [formFieldsData, getValidationResult, onChangeValidation, selectedCountry, selectedRegion]);
 
@@ -113,14 +120,9 @@ const SignUpStart = ({
 
   const onCancel = useCallback(() => {
     history.push(AuthPages.SignIn);
-  }, [history]);
-
-  const isRussiaSelected = useMemo(() => {
-    if (selectedCountry) {
-      return selectedCountry.value === "RU";
-    }
-    return false;
-  }, [selectedCountry]);
+    resetState();
+    resetLocalStorage();
+  }, [history, resetLocalStorage, resetState]);
 
   return (
     <Layout

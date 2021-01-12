@@ -28,6 +28,9 @@ import { useDispatch } from "react-redux";
 import { appActions } from "../../../../state/appState";
 import { updateUser } from "../../../../services/users/api";
 import { ComboboxOption } from "../../../../components/VirtualAutoComplete";
+import MaskedInfoLabel from "../../../../components/MaskedInfoLabel";
+import SelectRussianRegion from "../../../../components/SelectRussianRegion";
+import GridRow from "../../../../components/GridRow";
 
 interface Props {
   useFormFieldsState: UseFormFieldsState<Record<SignUpTextField, string>>;
@@ -39,6 +42,8 @@ interface Props {
   onChangeCountry: (event: any, value: ComboboxOption | null) => void;
   selectedRegion: ComboboxOption | null;
   onChangeRegion: (event: any, value: ComboboxOption | null) => void;
+  resetLocalStorage: () => void;
+  isRussiaSelected: boolean;
 }
 
 const SignUpEnd = ({
@@ -50,7 +55,9 @@ const SignUpEnd = ({
   selectedCountry,
   onChangeCountry,
   selectedRegion,
-  onChangeRegion
+  onChangeRegion,
+  resetLocalStorage,
+  isRussiaSelected
 }: Props) => {
   const {
     formFieldsData,
@@ -64,14 +71,23 @@ const SignUpEnd = ({
       if (formFieldsData[textFieldName as SignUpTextField] && textFieldName !== "password") {
         labelText = `${labelText} ${formFieldsData[textFieldName as SignUpTextField]}`;
       }
-      if (textFieldName === "password") {
-        labelText = `${labelText} ${"*".repeat(formFieldsData.password.length)}`;
-      }
+
       return (
         <Grid item xs={12} key={textFieldName}>
-          <Typography>
-            { labelText }
-          </Typography>
+          {
+            textFieldName === "password"
+              ? (
+                <MaskedInfoLabel
+                  data={formFieldsData.password}
+                  label={labelText}
+                />
+              )
+              : (
+                <Typography>
+                  { labelText }
+                </Typography>
+              )
+          }
         </Grid>
       );
     });
@@ -120,7 +136,8 @@ const SignUpEnd = ({
     resetState();
     setAbout("");
     setPinCode("");
-  }, [resetState]);
+    resetLocalStorage();
+  }, [resetLocalStorage, resetState]);
 
   const mainAction = useCallback(async () => {
     const {
@@ -250,7 +267,21 @@ const SignUpEnd = ({
           />
           <CardContent>
             <Grid container spacing={2}>
-              { renderInfoLabels(["firstName", "lastName", "country"]) }
+              { renderInfoLabels(["firstName", "lastName"]) }
+              <Grid item xs={12}>
+                <Typography>
+                  { `Country: ${selectedCountry?.name ?? ""}` }
+                </Typography>
+              </Grid>
+              {
+                isRussiaSelected && (
+                  <Grid item xs={12}>
+                    <Typography>
+                      { `Region: ${selectedRegion?.name ?? ""}` }
+                    </Typography>
+                  </Grid>
+                )
+              }
               <Grid item xs={12}>
                 <Typography>
                   { `About: ${about}` }
@@ -275,7 +306,10 @@ const SignUpEnd = ({
               <Grid item xs={12}>
                 <Box display="flex">
                   <Box>
-                    <Typography>{ `PIN: ${pinCode}` }</Typography>
+                    <MaskedInfoLabel
+                      data={pinCode}
+                      label="PIN:"
+                    />
                   </Box>
                   <Box ml="auto">
                     <Button
@@ -283,7 +317,7 @@ const SignUpEnd = ({
                       variant="outlined"
                       onClick={onChangeShowPinCodeEdit(true)}
                     >
-                      Set PIN
+                      { pinCode ? "Reset PIN" : "Set PIN" }
                     </Button>
                   </Box>
                 </Box>
