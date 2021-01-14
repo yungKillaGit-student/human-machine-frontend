@@ -11,36 +11,24 @@ import { FileUploadResponseDto } from "../types/files";
 axios.defaults.baseURL = API_PATH;
 axios.defaults.paramsSerializer = params => stringify(params);
 axios.defaults.withCredentials = true;
-axios.interceptors.request.use((config) => {
-  document.body.style.cursor = "progress";
-  return config;
-});
-axios.interceptors.response.use((config) => {
-  document.body.style.cursor = "default";
-  return config;
-});
 
 interface RequestOptions {
   method?: Method;
   data?: any;
   headers?: any;
   withCredentials?: boolean;
+  hideErrorDialog?: boolean;
 }
 
 export const readErrorInfo = async (response: any): Promise<ErrorInfo> => {
   let error;
-  const { status } = response;
+  const { code } = response;
   try {
-    if (response.clone) {
-      error = await response.clone().json();
-    }
-    else {
-      error = JSON.parse(response);
-    }
-    error.parameters = { ...error.parameters, ...{ status: response.status } };
+    error = { ...response };
+    error.parameters = { ...error.parameters, ...{ status: code } };
   }
   catch (ex) {
-    if (status >= 500 && status <= 599) {
+    if (code >= 500 && code <= 599) {
       error = "ERROR_SERVER_UNAVAILABLE";
     }
     else {
@@ -48,21 +36,24 @@ export const readErrorInfo = async (response: any): Promise<ErrorInfo> => {
     }
   }
 
-  return error.message ? error : { message: error, parameters: { status: response.status } };
+  return error.message ? error : { message: error, parameters: { status: code } };
 };
 
-export const handleError = async (response: any): Promise<ApiError> => {
+export const handleError = async (response: any, hideErrorDialog?: boolean): Promise<ApiError> => {
   const errorInfo = await readErrorInfo(response);
-  showError(errorInfo);
 
-  return new ApiError(getUserFriendlyMessage(errorInfo), errorInfo, response.status);
+  if (!hideErrorDialog) {
+    showError(errorInfo);
+  }
+
+  return new ApiError(getUserFriendlyMessage(errorInfo), errorInfo, response.code);
 };
 
 export const executeRequest = async <T>(url: string, options: RequestOptions & DataOptions = { withCredentials: true }): Promise<T> => {
   return new Promise((resolve, reject) => {
     axios.request({ ...{ url }, ...options })
       .then(response => resolve(response.data))
-      .catch(response => reject(handleError(response)));
+      .catch(err => reject(handleError(err.response.data, options.hideErrorDialog)));
   });
 };
 

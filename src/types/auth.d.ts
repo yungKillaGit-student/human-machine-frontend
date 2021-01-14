@@ -5,4 +5,5 @@ export interface User {
   lastName: string;
   country: string;
   about?: string;
+  isConfirmed: boolean;
 }

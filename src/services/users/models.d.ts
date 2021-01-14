@@ -7,6 +7,7 @@ export interface UserCreateDto {
   country: string;
   about?: string;
   pinCode: string;
+  shortCountry: string;
 }
 
 export interface UserUpdateDto {

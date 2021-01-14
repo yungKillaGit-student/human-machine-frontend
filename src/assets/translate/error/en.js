@@ -19,6 +19,8 @@ export default {
   "NOT_ACCEPTABLE": "Sorry, something went wrong",
   // 409 CONFLICT
   "ERROR_CONFLICT_OBJECT_ALREADY_EXISTS": "{{entity}} already exists",
+  // 410 GONE
+  "RESOURCE_IS_NOT_LONGER_AVAILABLE": "This user is already confirmed",
   // 500 INTERNAL SERVER ERROR
   "INTERNAL_SERVER_ERROR": "Internal Server Error",
   "ERROR_FILE_COULD_NOT_BE_UPLOADED": "Something went wrong, please try another file",

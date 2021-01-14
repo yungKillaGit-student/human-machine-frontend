@@ -179,7 +179,8 @@ const SignUpEnd = ({
       lastName: lastName,
       password: password,
       pinCode: pinCode,
-      repeatedPassword: repeatPassword
+      repeatedPassword: repeatPassword,
+      shortCountry: selectedCountry.value
     };
 
     try {

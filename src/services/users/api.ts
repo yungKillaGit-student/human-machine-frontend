@@ -11,3 +11,11 @@ export const updateUser = (updateDto: UserUpdateDto, userId: string) => {
     data: updateDto
   });
 };
+
+export const verifyUser = (userId: string, token: string) => {
+  return executeRequest<User>(`${endpoint}/${userId}/verify`, {
+    method: "PATCH",
+    data: { token },
+    hideErrorDialog: true
+  });
+};
